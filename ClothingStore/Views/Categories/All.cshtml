@@ -1,0 +1,25 @@
+﻿@model IEnumerable<ClothingStore.Models.Category>
+
+@{
+    ViewData["Title"] = "All Categories";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Category Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Add", "Categories")" class="btn btn-success">Add New Category</a>
