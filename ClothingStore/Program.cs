@@ -23,10 +23,48 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 
 builder.Services.AddControllersWithViews();
 
-// ✅ Добави това за сесиите
+// ✅ Добавено за сесии
 builder.Services.AddSession();
 
 var app = builder.Build();
+
+// ✅ Създаване на роли и админ акаунт
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    // 1. Добавяне на роли
+    string[] roles = { "Admin", "User" };
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+
+    // 2. Създаване на админ акаунт
+    string adminEmail = "admin@store.com";
+    string adminPassword = "Admin123!";
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        var user = new ApplicationUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(user, adminPassword);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(user, "Admin");
+        }
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -44,8 +82,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// ✅ Добави това преди authentication
-app.UseSession();
+app.UseSession(); 
 
 app.UseAuthentication();
 app.UseAuthorization();
