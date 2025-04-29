@@ -95,5 +95,22 @@ namespace ClothingStore.Controllers
             ViewBag.Statuses = Enum.GetValues(typeof(OrderStatus)).Cast<OrderStatus>().ToList();
             return View("All", orders);
         }
+
+        // POST: /Orders/ChangeStatus – само за Admin
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(int orderId, OrderStatus status)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            order.Status = status;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("All");
+        }
     }
 }
