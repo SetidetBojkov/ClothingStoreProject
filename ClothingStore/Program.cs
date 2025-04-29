@@ -1,5 +1,5 @@
 ﻿using ClothingStore.Data;
-using ClothingStore.Models; // Добавено
+using ClothingStore.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,10 +18,13 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
 })
-.AddRoles<IdentityRole>() // ако искаш да ползваш роли като Admin, User и т.н.
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
+
+// ✅ Добави това за сесиите
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -41,7 +44,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); 
+// ✅ Добави това преди authentication
+app.UseSession();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
