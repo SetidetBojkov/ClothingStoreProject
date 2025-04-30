@@ -1,26 +1,36 @@
-﻿/* СТИЛЕН ФОН */
-body {
-    background: linear-gradient(to right, #f9f9f9, #e0eafc);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+﻿body {
+    background: #fdfdfd;
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
 }
 
-    /* ТЪМЕН/СВЕТЪЛ РЕЖИМ с бутон */
-    body.dark-mode {
-        background-color: #121212;
-        color: #fff;
+h1, h2, h3 {
+    font-weight: 600;
+}
+
+.navbar {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.btn-primary {
+    background-color: #4a90e2;
+    border-color: #357ab7;
+}
+
+    .btn-primary:hover {
+        background-color: #357ab7;
+        border-color: #2c619c;
     }
 
-.dark-mode .card,
-.dark-mode .navbar,
-.dark-mode .btn {
-    background-color: #1e1e1e !important;
-    color: #ffffff;
-    border-color: #333;
-}
-
-.toggle-dark {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1000;
+.card {
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }

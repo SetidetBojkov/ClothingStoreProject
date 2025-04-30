@@ -4,32 +4,39 @@
     ViewData["Title"] = "Products - All";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="mb-4">@ViewData["Title"]</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
+@if (User.IsInRole("Admin"))
+{
+    <a href="@Url.Action("Add", "Products")" class="btn btn-success mb-3">Add New Product</a>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">No products available.</div>
+}
+else
+{
+    <div class="row">
         @foreach (var product in Model)
         {
-            <tr>
-                <td>@product.Name</td>
-                <td>@product.Category.Name</td>
-                <td>@product.Price.ToString("C")</td>
-                <td>
-                    <a class="btn btn-primary" href="@Url.Action("Details", "Products", new { id = product.Id })">View</a>
-                    <a class="btn btn-secondary" href="@Url.Action("Edit", "Products", new { id = product.Id })">Edit</a>
-                    <a class="btn btn-danger" href="@Url.Action("Delete", "Products", new { id = product.Id })">Delete</a>
-                </td>
-            </tr>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="@Url.Action("Details", "Products", new { id = product.Id })">
+                        <img src="@product.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Product Image" />
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="@Url.Action("Details", "Products", new { id = product.Id })" class="text-decoration-none text-dark">
+                                @product.Name
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted">@product.Price.ToString("C")</p>
+                        <p class="card-text"><small>@product.Category?.Name</small></p>
+                        <a class="btn btn-outline-primary" href="@Url.Action("Details", "Products", new { id = product.Id })">Details</a>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
-
-<a href="@Url.Action("Add", "Products")" class="btn btn-success">Add New Product</a>
+    </div>
+}

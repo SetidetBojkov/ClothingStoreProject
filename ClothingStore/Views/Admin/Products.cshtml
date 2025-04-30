@@ -1,0 +1,43 @@
+﻿@model List<ClothingStore.Models.Product>
+
+@{
+    ViewData["Title"] = "Продукти";
+}
+
+<h1 class="mb-4">Всички продукти</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Снимка</th>
+            <th>Име</th>
+            <th>Категория</th>
+            <th>Цена</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@product.ImageUrl" alt="Product Image" width="80" height="80" />
+                </td>
+                <td>@product.Name</td>
+                <td>@product.Category?.Name</td>
+                <td>@product.Price лв.</td>
+                <td>
+                    <form asp-action="DeleteProduct" asp-controller="Admin" method="post" onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този продукт?');">
+                        <input type="hidden" name="id" value="@product.Id" />
+                        <button type="submit" class="btn btn-sm btn-danger">Изтрий</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
