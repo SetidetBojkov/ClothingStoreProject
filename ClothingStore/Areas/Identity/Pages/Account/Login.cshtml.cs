@@ -50,7 +50,7 @@ namespace ClothingStore.Areas.Identity.Pages.Account
                     var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, isPersistent: false, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
-                        HttpContext.Session.Clear(); // 🧹 Изчистване на количката при вход
+                        HttpContext.Session.Clear(); 
                         return LocalRedirect(returnUrl);
                     }
                 }

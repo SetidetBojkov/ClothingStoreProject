@@ -18,11 +18,37 @@ namespace ClothingStore.Controllers
             _context = context;
         }
 
-        // Всички продукти
-        public async Task<IActionResult> All()
+        // Всички продукти с филтриране
+        [HttpGet]
+        public async Task<IActionResult> All(int? categoryId, decimal? priceFrom, decimal? priceTo)
         {
-            var products = await _context.Products.Include(p => p.Category).ToListAsync();
-            return View(products);
+            var productsQuery = _context.Products.Include(p => p.Category).AsQueryable();
+
+            if (categoryId.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.CategoryId == categoryId);
+            }
+
+            if (priceFrom.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.Price >= priceFrom);
+            }
+
+            if (priceTo.HasValue)
+            {
+                productsQuery = productsQuery.Where(p => p.Price <= priceTo);
+            }
+
+            var model = new ProductFilterViewModel
+            {
+                Products = await productsQuery.ToListAsync(),
+                Categories = await _context.Categories.ToListAsync(),
+                SelectedCategoryId = categoryId,
+                PriceFrom = priceFrom,
+                PriceTo = priceTo
+            };
+
+            return View(model);
         }
 
         // GET: Add Product
@@ -72,7 +98,7 @@ namespace ClothingStore.Controllers
             }
             else
             {
-                product.ImageUrl = "/images/default-product.jpg"; // Увери се, че го има
+                product.ImageUrl = "/images/default-product.jpg";
             }
 
             _context.Products.Add(product);

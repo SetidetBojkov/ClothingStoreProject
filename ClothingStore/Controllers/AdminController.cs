@@ -44,7 +44,6 @@ namespace ClothingStore.Controllers
             return RedirectToAction("Products");
         }
 
-        
         public async Task<IActionResult> AllOrders()
         {
             var orders = await _context.Orders
@@ -54,6 +53,27 @@ namespace ClothingStore.Controllers
                 .ToListAsync();
 
             return View(orders);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var order = await _context.Orders
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order == null)
+            {
+                TempData["ErrorMessage"] = "Поръчката не беше намерена.";
+                return RedirectToAction("AllOrders");
+            }
+
+            _context.OrderItems.RemoveRange(order.Items);
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Поръчката беше успешно изтрита.";
+            return RedirectToAction("AllOrders");
         }
     }
 }

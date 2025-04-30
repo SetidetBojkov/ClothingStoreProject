@@ -18,7 +18,7 @@ namespace ClothingStore.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await _signInManager.SignOutAsync();
-            HttpContext.Session.Clear(); // 🧹 Изчистване на сесията при logout
+            HttpContext.Session.Clear(); 
             return returnUrl != null ? LocalRedirect(returnUrl) : RedirectToPage("/Index");
         }
     }
