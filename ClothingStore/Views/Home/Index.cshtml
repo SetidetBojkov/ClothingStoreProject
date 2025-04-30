@@ -1,14 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "Добре дошли в ClothingStore!";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="text-center mt-5">
-    <h1 class="display-4">Добре дошли в <strong>ClothingStore</strong>!</h1>
-    <p class="lead">Вашият модерен онлайн магазин за дрехи</p>
-
-    <div class="mt-4">
-        <a href="/Products/All" class="btn btn-primary btn-lg m-2">Разгледай продукти</a>
-        <a href="/Cart/Index" class="btn btn-outline-success btn-lg m-2">Количка</a>
-        <a href="/Identity/Account/Manage" class="btn btn-outline-secondary btn-lg m-2">Моят акаунт</a>
+<!-- Hero section -->
+<div class="hero-section-wrapper">
+    <div class="hero-section">
+        <div class="overlay">
+            <div class="content text-center">
+                <h1 class="display-3 fw-bold">Открий стила си</h1>
+                <p class="lead">Разгледай новата ни колекция Пролет 2025</p>
+                <a href="/Products/All" class="btn btn-primary btn-lg">Разгледай</a>
+            </div>
+        </div>
     </div>
 </div>
+

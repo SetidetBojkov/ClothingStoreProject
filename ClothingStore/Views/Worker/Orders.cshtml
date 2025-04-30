@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ClothingStore.Models.Order>
+
+@{
+    ViewData["Title"] = "Поръчки";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Поръчки</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">Няма направени поръчки.</div>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header fw-bold">
+                    Поръчка #@order.Id | Потребител: @order.User.UserName | Дата: @order.OrderDate.ToString("dd.MM.yyyy HH:mm")
+                </div>
+                <div class="card-body">
+                    @foreach (var item in order.Items)
+                    {
+                        <div class="mb-2">
+                            @item.ProductName (x @item.Quantity)
+                        </div>
+                    }
+                    <div class="text-end mt-3">
+                        <strong>Статус:</strong> @order.Status
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

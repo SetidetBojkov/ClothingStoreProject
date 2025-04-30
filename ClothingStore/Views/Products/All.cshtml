@@ -2,97 +2,99 @@
 
 @{
     ViewData["Title"] = "Продукти";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="mb-4">@ViewData["Title"]</h1>
+<div class="container my-5">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
 
-<div class="row">
-    <!-- Sidebar: Филтри -->
-    <div class="col-md-3">
-        <form method="get">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <strong>Филтрирай</strong>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="category" class="form-label">Категория</label>
-                        <select class="form-select" id="category" name="categoryId">
-                            <text>
-                            <option value="">Всички</option></text>
-                            @foreach (var category in Model.Categories)
-                            {
-                                if (Model.SelectedCategoryId == category.Id)
+    <div class="row">
+        <!-- Sidebar: Филтри -->
+        <div class="col-md-3">
+            <form method="get">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>Филтрирай</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Категория</label>
+                            <select class="form-select" id="category" name="categoryId">
+                                <option value="">Всички</option>
+                                @foreach (var category in Model.Categories)
                                 {
-                                    <text>
-                                    <option value="@category.Id" selected="selected">@category.Name</option></text>
-                                }
-                                else
-                                {
-                                    <text>
-                                    <option value="@category.Id">@category.Name</option></text>
-                                }
-                            }
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Цена от</label>
-                        <input type="number" class="form-control" name="priceFrom" value="@Model.PriceFrom" step="0.01" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Цена до</label>
-                        <input type="number" class="form-control" name="priceTo" value="@Model.PriceTo" step="0.01" />
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100">Приложи</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!-- Main content: Продукти -->
-    <div class="col-md-9">
-        @if (!Model.Products.Any())
-        {
-            <div class="alert alert-warning">Няма намерени продукти.</div>
-        }
-        else
-        {
-            <div class="row">
-                @foreach (var product in Model.Products)
-                {
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <a href="@Url.Action("Details", "Products", new { id = product.Id })">
-                                <img src="@product.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Product Image" />
-                            </a>
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a href="@Url.Action("Details", "Products", new { id = product.Id })" class="text-decoration-none text-dark">
-                                        @product.Name
-                                    </a>
-                                </h5>
-                                <p class="card-text text-muted">@product.Price.ToString("C")</p>
-                                <p class="card-text"><small>@product.Category?.Name</small></p>
-
-                                <div class="d-flex justify-content-between">
-                                    <a class="btn btn-outline-primary" href="@Url.Action("Details", "Products", new { id = product.Id })">Детайли</a>
-
-                                    @if (!User.IsInRole("Admin"))
+                                    if (Model.SelectedCategoryId == category.Id)
                                     {
-                                        <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
-                                            <input type="hidden" name="productId" value="@product.Id" />
-                                            <button type="submit" class="btn btn-primary">Купи сега</button>
-                                        </form>
+                                        <option value="@category.Id" selected="selected">@category.Name</option>
                                     }
+                                    else
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Цена от</label>
+                            <input type="number" class="form-control" name="priceFrom" value="@Model.PriceFrom" step="0.01" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Цена до</label>
+                            <input type="number" class="form-control" name="priceTo" value="@Model.PriceTo" step="0.01" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Приложи</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Main content: Продукти -->
+        <div class="col-md-9">
+            @if (!Model.Products.Any())
+            {
+                <div class="alert alert-warning">Няма намерени продукти.</div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card product-card h-100 shadow-sm">
+                                <a href="@Url.Action("Details", "Products", new { id = product.Id })">
+                                    <img src="@product.ImageUrl"
+                                         class="card-img-top"
+                                         alt="@product.Name"
+                                         style="height: 250px; object-fit: cover;" />
+                                </a>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">@product.Name</h5>
+                                    <p class="card-text">@product.Price.ToString("C")</p>
+                                    <p class="card-text text-muted"><small>@product.Category?.Name</small></p>
+
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a class="btn btn-outline-primary"
+                                           href="@Url.Action("Details", "Products", new { id = product.Id })">
+                                            Детайли
+                                        </a>
+
+                                        @if (!User.IsInRole("Admin"))
+                                        {
+                                            <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                                                <input type="hidden" name="productId" value="@product.Id" />
+                                                <button type="submit" class="btn btn-primary">Купи сега</button>
+                                            </form>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-        }
+                    }
+                </div>
+            }
+        </div>
     </div>
 </div>

@@ -1,36 +1,99 @@
 ﻿body {
-    background: #fdfdfd;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f9f9;
     color: #333;
 }
 
-h1, h2, h3 {
-    font-weight: 600;
-}
-
-.navbar {
-    background-color: #ffffff;
-    border-bottom: 1px solid #ddd;
-}
-
-footer {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-top: 1px solid #ddd;
-}
-
 .btn-primary {
-    background-color: #4a90e2;
-    border-color: #357ab7;
+    background-color: #e91e63;
+    border: none;
 }
 
     .btn-primary:hover {
-        background-color: #357ab7;
-        border-color: #2c619c;
+        background-color: #ad1457;
     }
 
-.card {
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.3s ease;
+}
+
+    .product-card:hover {
+        transform: scale(1.02);
+    }
+.hero-section-wrapper {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.hero-section {
+    background-image: url('/images/73461688-c115-48ef-9b42-84347affe686.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    position: relative;
+}
+
+    .hero-section .overlay {
+        background-color: rgba(0, 0, 0, 0.55);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-section .content {
+        color: white;
+        padding: 20px;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+    }
+
+    .hero-section .btn-primary {
+        background-color: #e91e63;
+        border: none;
+    }
+
+        .hero-section .btn-primary:hover {
+            background-color: #c2185b;
+        }
+.product-card img {
+    height: 300px;
+    object-fit: cover;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.product-card .card-body {
+    padding: 1.25rem;
+}
+
+.product-card .card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.product-card .btn {
+    border-radius: 30px;
+    padding: 0.5rem 1.5rem;
+}
+.btn-primary {
+    background-color: #e91e63;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #c2185b;
+    }
+
+.btn-outline-secondary:hover {
+    background-color: #eee;
 }

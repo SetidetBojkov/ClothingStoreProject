@@ -1,59 +1,100 @@
-﻿@model List<ClothingStore.Models.Order>
+﻿@model IEnumerable<ClothingStore.Models.AdminOrderViewModel>
 
 @{
     ViewData["Title"] = "Всички поръчки";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="mb-4">📦 Всички поръчки</h1>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Всички поръчки</h2>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-}
+    <!-- Филтри -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label class="form-label">Статус</label>
+            <select class="form-select" name="status">
+                <option value="">-- All --</option>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">From Date</label>
+            <input type="date" name="from" class="form-control" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">To Date</label>
+            <input type="date" name="to" class="form-control" />
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button class="btn btn-danger w-100" type="submit">Филтрирай</button>
+        </div>
+    </form>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">Няма направени поръчки.</div>
-}
-else
-{
-    @foreach (var order in Model)
+    @if (!Model.Any())
     {
-        <div class="card mb-3">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <strong>Поръчка #@order.Id</strong>
-                <span>Потребител: @order.User?.Email | Дата: @order.OrderDate.ToString("g")</span>
-            </div>
-            <div class="card-body">
-                <ul class="mb-3">
+        <div class="alert alert-info text-center">Няма поръчки.</div>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header fw-bold">
+                    Поръчка #@order.Id | Потребител: @order.CustomerName | Дата: @order.Date.ToString("dd.MM.yyyy HH:mm")
+                </div>
+                <div class="card-body">
                     @foreach (var item in order.Items)
                     {
-                        <li>@item.ProductName (@item.Quantity бр.) - @(item.Price * item.Quantity).ToString("C")</li>
+                        <div class="mb-2">
+                            @item.ProductName (x @item.Quantity)
+                        </div>
                     }
-                </ul>
-
-                <div class="d-flex align-items-center gap-2">
-                    <form asp-action="UpdateOrderStatus" asp-controller="Admin" method="post" class="d-flex align-items-center gap-2">
-                        <input type="hidden" name="id" value="@order.Id" />
-                        <select name="status" class="form-select">
-                            @foreach (var status in Enum.GetValues(typeof(ClothingStore.Models.OrderStatus)))
+                    <div class="text-end mt-3">
+                        <strong>Общо:</strong> @order.Total.ToString("C")
+                    </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <form asp-action="ChangeStatus" asp-controller="Admin" method="post" class="d-flex gap-2">
+                        <input type="hidden" name="orderId" value="@order.Id" />
+                        <select name="newStatus" class="form-select w-auto">
+                            @if (order.Status == "Pending")
                             {
-                                <option value="@status" selected="@(order.Status.ToString() == status.ToString() ? "selected" : null)">@status</option>
+                                <option value="Pending" selected>Pending</option>
+                            }
+                            else
+                            {
+                                <option value="Pending">Pending</option>
+                            }
+
+                            @if (order.Status == "Completed")
+                            {
+                                <option value="Completed" selected>Completed</option>
+                            }
+                            else
+                            {
+                                <option value="Completed">Completed</option>
+                            }
+
+                            @if (order.Status == "Cancelled")
+                            {
+                                <option value="Cancelled" selected>Cancelled</option>
+                            }
+                            else
+                            {
+                                <option value="Cancelled">Cancelled</option>
                             }
                         </select>
                         <button type="submit" class="btn btn-outline-primary">Промени</button>
                     </form>
 
-                    <form asp-action="DeleteOrder" asp-controller="Admin" method="post" class="d-inline" onsubmit="return confirm('Сигурни ли сте, че искате да изтриете тази поръчка?');">
-                        <input type="hidden" name="id" value="@order.Id" />
-                        <button type="submit" class="btn btn-outline-danger">Изтрий</button>
+                    <form asp-action="DeleteOrder" asp-controller="Admin" method="post" onsubmit="return confirm('Сигурни ли сте?');">
+                        <input type="hidden" name="orderId" value="@order.Id" />
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Изтрий</button>
                     </form>
                 </div>
             </div>
-        </div>
+        }
     }
-}
+</div>
