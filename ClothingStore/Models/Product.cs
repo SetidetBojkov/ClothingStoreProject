@@ -20,6 +20,7 @@ namespace ClothingStore.Models
 
         public string? ImageUrl { get; set; }
 
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public Category? Category { get; set; }
     }
 }

@@ -97,3 +97,6 @@
 .btn-outline-secondary:hover {
     background-color: #eee;
 }
+footer {
+    margin-top: 150px;
+}

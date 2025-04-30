@@ -42,4 +42,59 @@
             </div>
         </div>
     </div>
+
+    <hr class="my-5" />
+
+    <!-- Отзиви за продукта -->
+    <div class="row mt-4">
+        <div class="col-md-8 offset-md-2">
+            <h4 class="mb-4">Отзиви</h4>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            @if (Model.Reviews != null && Model.Reviews.Any())
+            {
+                @foreach (var review in Model.Reviews.OrderByDescending(r => r.Id))
+                {
+                    <div class="mb-4 border-bottom pb-2">
+                        <strong>@review.User.UserName</strong> - ⭐ @review.Rating / 5
+                        <p class="mb-1">@review.Comment</p>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">Все още няма отзиви за този продукт.</p>
+            }
+
+            @if (User.Identity?.IsAuthenticated ?? false)
+            {
+                <hr />
+                <h5 class="mt-4">Остави отзив</h5>
+                <form asp-action="AddReview" method="post">
+                    <input type="hidden" name="ProductId" value="@Model.Id" />
+                    <div class="mb-3">
+                        <label class="form-label">Оценка (1–5):</label>
+                        <input type="number" name="Rating" class="form-control" min="1" max="5" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Коментар:</label>
+                        <textarea name="Comment" class="form-control" maxlength="500" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Изпрати отзив</button>
+                </form>
+            }
+            else
+            {
+                <p class="text-muted mt-4">Само влезли потребители могат да оставят отзив.</p>
+            }
+        </div>
+    </div>
 </div>
