@@ -29,14 +29,17 @@
                             <a class="nav-link text-dark" asp-controller="Products" asp-action="All">Продукти</a>
                         </li>
 
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">🛒 Количка</a>
+                            </li>
+                        }
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
                             @* Клиенти *@
                             @if (!User.IsInRole("Admin"))
                             {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">Количка</a>
-                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Orders" asp-action="Mine">Моите поръчки</a>
                                 </li>
@@ -58,6 +61,15 @@
     </header>
 
     <div class="container">
+        @* ✅ Показване на TempData съобщение за успех *@
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -79,4 +91,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-    

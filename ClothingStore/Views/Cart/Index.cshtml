@@ -1,46 +1,72 @@
 ﻿@model List<ClothingStore.Models.CartItem>
 
 @{
-    ViewData["Title"] = "Shopping Cart";
+    ViewData["Title"] = "Вашата количка";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1 class="mb-4">🛒 @ViewData["Title"]</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
 
 @if (!Model.Any())
 {
-    <p>Your cart is empty.</p>
+    <div class="alert alert-info">Количката ви е празна.</div>
 }
 else
 {
-    <table class="table">
-        <thead>
+    <table class="table table-bordered align-middle">
+        <thead class="table-dark">
             <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price per item</th>
-                <th>Total</th>
-                <th>Actions</th>
+                <th>Снимка</th>
+                <th>Продукт</th>
+                <th>Количество</th>
+                <th>Цена</th>
+                <th>Общо</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.Product.Name</td>
+                    <td><img src="@item.ImageUrl" width="80" alt="Product Image" /></td>
+                    <td>@item.ProductName</td>
                     <td>@item.Quantity</td>
-                    <td>@item.Product.Price.ToString("C")</td>
-                    <td>@(item.Product.Price * item.Quantity).ToString("C")</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>@(item.Price * item.Quantity).ToString("C")</td>
                     <td>
-                        <a class="btn btn-danger" href="@Url.Action("Remove", "Cart", new { productId = item.ProductId })">Remove</a>
+                        <a href="@Url.Action("Remove", "Cart", new { productId = item.ProductId })"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Наистина ли искате да премахнете този продукт?');">
+                            Премахни
+                        </a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <h3>Total Amount: @Model.Sum(x => x.Product.Price * x.Quantity).ToString("C")</h3>
+    <div class="text-end fs-5 fw-bold mb-3">
+        Общо: @Model.Sum(i => i.Price * i.Quantity).ToString("C")
+    </div>
 
-    <form asp-controller="Orders" asp-action="Create" method="post">
-        <button type="submit" class="btn btn-success">Place Order</button>
-    </form>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <form asp-action="Checkout" method="post" class="text-end">
+            <button type="submit" class="btn btn-success">✅ Приключи поръчката</button>
+        </form>
+    }
+    else
+    {
+        <div class="text-end">
+            <a href="/Identity/Account/Login" class="btn btn-outline-primary">🔐 Влез, за да поръчаш</a>
+        </div>
+    }
 }

@@ -3,6 +3,7 @@ using ClothingStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClothingStore.Controllers
@@ -41,6 +42,18 @@ namespace ClothingStore.Controllers
             }
 
             return RedirectToAction("Products");
+        }
+
+        
+        public async Task<IActionResult> AllOrders()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Items)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            return View(orders);
         }
     }
 }

@@ -1,0 +1,47 @@
+﻿@model List<ClothingStore.Models.Order>
+
+@{
+    ViewData["Title"] = "Всички поръчки";
+}
+
+<h1 class="mb-4">📦 Всички поръчки</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Няма направени поръчки.</div>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Потребител</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Продукти</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.User?.UserName</td>
+                    <td>@order.OrderDate.ToString("g")</td>
+                    <td>@order.Status</td>
+                    <td>
+                        <ul class="mb-0">
+                            @foreach (var item in order.Items)
+                            {
+                                <li>
+                                    <strong>@item.ProductName</strong> – @item.Quantity бр. × @item.Price.ToString("C") = <strong>@(item.Price * item.Quantity).ToString("C")</strong>
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
